@@ -1,0 +1,44 @@
+.d-none {
+    display: none;
+}
+
+.user-xzt {
+    object-fit: cover;
+    width: 100%;
+}
+
+.widget__form button,
+.widget__form input[type="email"],
+.widget__form input[type="email"],
+.widget__form input[type="email"],
+.widget__login button,
+.widget__login input[type="email"],
+.widget__login input[type="email"] {
+    display: inline-block;
+    width: 100%;
+    border: none;
+    height: 64px;
+    vertical-align: top;
+    background-color: rgba(0, 0, 0, 0.25);
+    margin: 1px 0 0;
+    padding-left: 24px;
+    font-weight: 100;
+    color: #fff;
+}
+
+.widget__login {
+    margin-top: calc(50vh - 63px * 6 / 2);
+}
+
+.main-brand {
+    width: 100%;
+    z-index: -1;
+}
+
+header .profile {
+    background: transparent;
+}
+
+.sidebar .user-info {
+    padding-bottom: 28px;
+}
