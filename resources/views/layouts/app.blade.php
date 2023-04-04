@@ -110,11 +110,11 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="main-nav__link" href="ui.html">
+                                <a class="main-nav__link" href="/">
                                     <span class="main-nav__icon">
                                         <i class="pe-7f-edit"></i>
                                     </span>
-                                    UI Elements
+                                    All Users
                                 </a>
                             </li>
                             <li class="main-nav--collapsible">
