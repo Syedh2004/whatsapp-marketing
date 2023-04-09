@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 04, 2023 at 03:41 AM
+-- Generation Time: Apr 09, 2023 at 01:13 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.0.23
 
@@ -36,6 +36,24 @@ CREATE TABLE `failed_jobs` (
   `exception` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
   `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `is_active`
+--
+
+CREATE TABLE `is_active` (
+  `id` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `is_active`
+--
+
+INSERT INTO `is_active` (`id`, `status`) VALUES
+(1, 1);
 
 -- --------------------------------------------------------
 
@@ -91,7 +109,9 @@ CREATE TABLE `model_has_roles` (
 --
 
 INSERT INTO `model_has_roles` (`role_id`, `model_type`, `model_id`) VALUES
-(1, 'App\\Models\\User', 3);
+(1, 'App\\Models\\User', 1),
+(1, 'App\\Models\\User', 3),
+(3, 'App\\Models\\User', 2);
 
 -- --------------------------------------------------------
 
@@ -135,8 +155,8 @@ CREATE TABLE `permissions` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `guard_name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -151,7 +171,14 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (5, 'product-list', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26'),
 (6, 'product-create', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26'),
 (7, 'product-edit', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26'),
-(8, 'product-delete', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26');
+(8, 'product-delete', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26'),
+(9, 'role-show', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26'),
+(10, 'users-create', 'web', '2023-04-02 06:54:26', '2023-04-02 06:54:26'),
+(11, 'users-show', 'web', '2023-04-09 10:05:56', '2023-04-09 10:05:56'),
+(12, 'users-edit', 'web', '2023-04-09 10:06:24', '2023-04-09 10:06:24'),
+(13, 'users-destroy', 'web', '2023-04-09 10:06:49', '2023-04-09 10:06:49'),
+(14, 'users', 'web', '2023-04-09 10:59:53', '2023-04-09 10:59:53'),
+(15, 'roles', 'web', '2023-04-09 11:00:12', '2023-04-09 11:00:12');
 
 -- --------------------------------------------------------
 
@@ -205,7 +232,8 @@ CREATE TABLE `roles` (
 --
 
 INSERT INTO `roles` (`id`, `name`, `guard_name`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'web', '2023-04-02 06:55:34', '2023-04-02 06:55:34');
+(1, 'Admin', 'web', '2023-04-02 06:55:34', '2023-04-02 06:55:34'),
+(3, 'User', 'web', '2023-04-09 04:56:43', '2023-04-09 04:56:43');
 
 -- --------------------------------------------------------
 
@@ -224,13 +252,23 @@ CREATE TABLE `role_has_permissions` (
 
 INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (1, 1),
+(1, 3),
 (2, 1),
 (3, 1),
 (4, 1),
 (5, 1),
 (6, 1),
 (7, 1),
-(8, 1);
+(8, 1),
+(9, 1),
+(10, 1),
+(11, 1),
+(12, 1),
+(13, 1),
+(14, 1),
+(14, 3),
+(15, 1),
+(15, 3);
 
 -- --------------------------------------------------------
 
@@ -256,9 +294,21 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `user_image`, `email_verified_at`, `is_admin`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'admin@itsolutionstuff.com', '', NULL, 1, '$2y$10$Y0N3500dWaKcrGULSIx5e.mWkmb5tLqAhxlVBHvlD2s5b9/FfwnGC', 'FyWMoDixYfsr4KS0E3X3FOKrhhUNWtvYrUX2JM4PqxvhR9kdIWhg05LsDntQ', '2023-04-02 02:08:16', '2023-04-02 02:08:16'),
-(2, 'User', 'syedh9837@gmail.com', 'profile.jpg', NULL, 0, '$2y$10$OHjqzUXXPoiU.BWUBbxFUeaUSR3eLZtEfVXBXWQI8PTHeCzEuTirm', NULL, '2023-04-02 02:08:16', '2023-04-02 02:08:16'),
-(3, 'Hardik Savani', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$Cis.cysu9kCxatYK61/2Qu54Ydw2mvuIt0q8VqDLQJyD1BInhj26y', '4sXB2lB5KbAbxRUK3zD4BPUvyMpiiMLfaxQitmGKcPcAgHbSkrrWaMxF5Kvj', '2023-04-02 06:55:34', '2023-04-02 06:55:34');
+(1, 'Admin', 'admin@itsolutionstuff.com', '', NULL, 0, '$2y$10$Y0N3500dWaKcrGULSIx5e.mWkmb5tLqAhxlVBHvlD2s5b9/FfwnGC', 'FyWMoDixYfsr4KS0E3X3FOKrhhUNWtvYrUX2JM4PqxvhR9kdIWhg05LsDntQ', '2023-04-02 02:08:16', '2023-04-02 02:08:16'),
+(2, 'User', 'syedh9837@gmail.com12', 'profile.jpg', NULL, 0, '$2y$10$zWRbV1p8PNzGd58x.32JkubVlpnPBkXfpNG74yXpbm3OszTxvSSVa', 'hY0YDMtFQMcPHuuKfthQ5eDhdqeMiKW4Iz9jzUySUAwbtGrZLXxqSVw4gp4R', '2023-04-02 02:08:16', '2023-04-08 16:13:02'),
+(3, 'Hardik Savani', 'admin@gmail.com', NULL, NULL, NULL, '$2y$10$Cis.cysu9kCxatYK61/2Qu54Ydw2mvuIt0q8VqDLQJyD1BInhj26y', 'CA3ly8coCccTuXVKQQiTiDAOJ7qHTJuQNGpgTWmwawdUNsMQOto9ywwQ10PW', '2023-04-02 06:55:34', '2023-04-02 06:55:34');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `whatsapp`
+--
+
+CREATE TABLE `whatsapp` (
+  `id` int(11) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `numbers` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -270,6 +320,12 @@ INSERT INTO `users` (`id`, `name`, `email`, `user_image`, `email_verified_at`, `
 ALTER TABLE `failed_jobs`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Indexes for table `is_active`
+--
+ALTER TABLE `is_active`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `migrations`
@@ -345,6 +401,12 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `whatsapp`
+--
+ALTER TABLE `whatsapp`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -353,6 +415,12 @@ ALTER TABLE `users`
 --
 ALTER TABLE `failed_jobs`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `is_active`
+--
+ALTER TABLE `is_active`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `migrations`
@@ -364,7 +432,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -382,13 +450,19 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `roles`
 --
 ALTER TABLE `roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `whatsapp`
+--
+ALTER TABLE `whatsapp`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

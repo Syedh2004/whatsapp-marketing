@@ -1,0 +1,38 @@
+.mt-10 {
+    margin-top: 10px;
+}
+
+.main-header__breadcrumb {
+    margin-left: 0px;
+}
+
+.widget__form button,
+.widget__form input[type="password"],
+.widget__form input[type="text"],
+.widget__login button,
+.widget__login input[type="password"],
+.widget__login input[type="text"], select {
+    display: inline-block;
+    width: 100%;
+    border: none;
+    height: 64px;
+    vertical-align: top;
+    background-color: rgba(0, 0, 0, 0.25);
+    margin: 1px 0 0;
+    padding-left: 24px;
+    font-weight: 100;
+    color: #fff;
+}
+
+.mt-30 {
+    margin-top: 30px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.table td:last-child, .table th:last-child, .table-striped td:last-child, .table-striped th:last-child {
+    width: auto;
+}
+

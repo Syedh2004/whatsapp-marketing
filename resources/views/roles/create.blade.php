@@ -1,56 +1,69 @@
-@extends('layouts.apps')
-
+@extends('layouts.app')
 
 @section('content')
-<div class="row">
-    <div class="col-lg-12 margin-tb">
-        <div class="pull-left">
-            <h2>Create New Role</h2>
+
+@push('page-style')
+    <style>
+        option {
+            margin-top: 10px;
+        }
+    </style>
+@endpush
+
+<section class="content">
+    <header class="main-header">
+        <div class="main-header__nav">
+            <h1 class="main-header__title">
+                <span>Create New Role</span>
+            </h1>
+            <ul class="main-header__breadcrumb">
+                <li>
+                    <a href="/" onclick="return false;">Home</a>
+                </li>
+                <li class="active">
+                    <a href="{{ route('roles.index') }}"> Roles List</a>
+                </li>
+            </ul>
         </div>
-        <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('roles.index') }}"> Back</a>
+    </header>
+
+    <div class="row">
+        <div class="col-12">
+            @if (count($errors) > 0)
+                <div class="alert alert-danger">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                    </ul>
+                </div>
+            @endif
+            <article class="widget widget__form">
+                <header class="widget__header">
+                    <div class="widget__title">
+                        <i class="pe-7s-menu"></i><h3>Create User</h3>
+                    </div>
+                    <div class="widget__config">
+                        <a href="#"><i class="pe-7f-refresh"></i></a>
+                        <a href="#"><i class="pe-7s-close"></i></a>
+                    </div>
+                </header>
+
+                {!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
+                    <div class="widget__content">
+                        {!! Form::text('name', null, array('placeholder' => 'Name')) !!}
+                        <select name="permission[]" id="" multiple>
+                            @foreach($permissions as $permission)
+                                <option value="{{ $permission->id }}">{{ $permission->name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="submit">Apply</button>
+                    </div>
+                {!! Form::close() !!}
+            </article>
         </div>
     </div>
-</div>
+</section>
 
-
-@if (count($errors) > 0)
-    <div class="alert alert-danger">
-        <strong>Whoops!</strong> There were some problems with your input.<br><br>
-        <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-        </ul>
-    </div>
-@endif
-
-
-{!! Form::open(array('route' => 'roles.store','method'=>'POST')) !!}
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="form-group">
-            <strong>Name:</strong>
-            {!! Form::text('name', null, array('placeholder' => 'Name','class' => 'form-control')) !!}
-        </div>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="form-group">
-            <strong>Permission:</strong>
-            <br/>
-            @foreach($permission as $value)
-                <label>{{ Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) }}
-                {{ $value->name }}</label>
-            <br/>
-            @endforeach
-        </div>
-    </div>
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-</div>
-{!! Form::close() !!}
-
-
-<p class="text-center text-primary"><small>Tutorial by ItSolutionStuff.com</small></p>
 @endsection

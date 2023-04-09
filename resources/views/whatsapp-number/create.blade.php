@@ -5,23 +5,23 @@
 @push('page-style')
     <style>
         option {
-            margin-top: 10px;
+            margin-top: 20px;
         }
-    </style>
+     </style>
 @endpush
 
 <section class="content">
     <header class="main-header">
         <div class="main-header__nav">
             <h1 class="main-header__title">
-                <span>Edit Role</span>
+                <span>Create New User</span>
             </h1>
             <ul class="main-header__breadcrumb">
                 <li>
                     <a href="/" onclick="return false;">Home</a>
                 </li>
                 <li class="active">
-                    <a href="{{ route('roles.index') }}"> Roles List</a>
+                    <a href="{{ route('whatsapp-number.index') }}"> Whatsapp Number List</a>
                 </li>
             </ul>
         </div>
@@ -29,6 +29,22 @@
 
     <div class="row">
         <div class="col-12">
+            @if ( Session::has('warning') )
+                <div class="alert alert-warning" role="alert">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <div class="alert-body">
+                        {{ Session::get('warning') }}
+                    </div>
+                </div>
+            @endif
+            @if ( Session::has('error') || $errors->any() )
+                <div class="alert alert-danger" role="alert">
+                    <strong>Whoops!</strong> There were some problems with your input.<br><br>
+                    <div class="alert-body">
+                        {{ Session::has('error') ? Session::get('error') : $errors->first() }}
+                    </div>
+                </div>
+            @endif
             @if (count($errors) > 0)
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
@@ -42,7 +58,7 @@
             <article class="widget widget__form">
                 <header class="widget__header">
                     <div class="widget__title">
-                        <i class="pe-7s-menu"></i><h3>Edit Roles</h3>
+                        <i class="pe-7s-menu"></i><h3>Add Whatsapp Number</h3>
                     </div>
                     <div class="widget__config">
                         <a href="#"><i class="pe-7f-refresh"></i></a>
@@ -50,14 +66,10 @@
                     </div>
                 </header>
 
-                {!! Form::model($role, ['method' => 'PATCH','route' => ['roles.update', $role->id]]) !!}
+                {!! Form::open(array('route' => 'whatsapp-number.store','method'=>'POST')) !!}
                     <div class="widget__content">
-                        {!! Form::text('name', null, array('placeholder' => 'Name')) !!}
-                        <select name="permission[]" id="" multiple>
-                            @foreach($permissions as $permission)
-                                <option value="{{ $permission->id }}" @if( in_array($permission->id, $rolePermissions) ) selected @endif >{{ $permission->name }}</option>
-                            @endforeach
-                        </select>
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder="Enter Name">
+                        <input type="text" name="numbers" value="{{ old('numbers') }}" placeholder="Enter Number">
                         <button type="submit">Apply</button>
                     </div>
                 {!! Form::close() !!}

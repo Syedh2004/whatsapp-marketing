@@ -1194,11 +1194,6 @@
         </div>
 
     </div>
-    <!-- /row -->
-    <footer class="footer-brand">
-        <img src="assets/img/logo_trim.png">
-        <p>© 2014 Glazzed. All rights reserved</p>
-    </footer>
 
 </section>
 

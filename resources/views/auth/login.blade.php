@@ -23,9 +23,9 @@
                 </div>
             @enderror
             @error('password')
-                <span class="alert alert-danger" role="alert">
+                <div class="alert alert-danger" role="alert">
                     <strong>{{ $message }}</strong>
-                </span>
+                </div>
             @enderror
             <header class="widget__header one-btn">
                 <div class="widget__title">
@@ -40,6 +40,7 @@
             </header>
             <form method="POST" action="{{ route('login') }}">
                 @csrf
+                <input type="hidden" name="is_active" id="is_active" />
                 <div class="widget__content">
                     <input placeholder="{{ __('Email Address') }}"
                         id="email" type="email" class="@error('email') is-invalid @enderror"
@@ -65,5 +66,20 @@
         </article>
     </div>
 </section>
+
+@push('page-script')
+<script>
+    $(document).ready(function(){
+        $.ajax({
+            type: "GET",
+            url: '{{ route('is_active') }}',
+            success:function(data) {
+                $("#is_active").val( data.status );
+            }
+        })
+    });
+</script>
+
+@endpush
 
 @endsection
