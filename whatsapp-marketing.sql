@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 09, 2023 at 01:13 PM
+-- Generation Time: Apr 09, 2023 at 07:49 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.0.23
 
@@ -178,7 +178,13 @@ INSERT INTO `permissions` (`id`, `name`, `guard_name`, `created_at`, `updated_at
 (12, 'users-edit', 'web', '2023-04-09 10:06:24', '2023-04-09 10:06:24'),
 (13, 'users-destroy', 'web', '2023-04-09 10:06:49', '2023-04-09 10:06:49'),
 (14, 'users', 'web', '2023-04-09 10:59:53', '2023-04-09 10:59:53'),
-(15, 'roles', 'web', '2023-04-09 11:00:12', '2023-04-09 11:00:12');
+(15, 'roles', 'web', '2023-04-09 11:00:12', '2023-04-09 11:00:12'),
+(16, 'whatsapp-number', 'web', '2023-04-09 11:22:29', '2023-04-09 11:22:29'),
+(17, 'whatsapp-number-create', 'web', '2023-04-09 11:22:29', '2023-04-09 11:22:29'),
+(18, 'whatsapp-number-list', 'web', '2023-04-09 11:22:29', '2023-04-09 11:22:29'),
+(19, 'whatsapp-number-show', 'web', '2023-04-09 11:22:29', '2023-04-09 11:22:29'),
+(20, 'whatsapp-number-edit', 'web', '2023-04-09 11:22:50', '2023-04-09 11:22:50'),
+(21, 'whatsapp-number-delete', 'web', '2023-04-09 11:22:50', '2023-04-09 11:22:50');
 
 -- --------------------------------------------------------
 
@@ -195,20 +201,6 @@ CREATE TABLE `personal_access_tokens` (
   `abilities` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `products`
---
-
-CREATE TABLE `products` (
-  `id` bigint(20) UNSIGNED NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `detail` text COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -268,7 +260,13 @@ INSERT INTO `role_has_permissions` (`permission_id`, `role_id`) VALUES
 (14, 1),
 (14, 3),
 (15, 1),
-(15, 3);
+(15, 3),
+(16, 1),
+(17, 1),
+(18, 1),
+(19, 1),
+(20, 1),
+(21, 1);
 
 -- --------------------------------------------------------
 
@@ -301,14 +299,24 @@ INSERT INTO `users` (`id`, `name`, `email`, `user_image`, `email_verified_at`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `whatsapp`
+-- Table structure for table `whatsapp_number`
 --
 
-CREATE TABLE `whatsapp` (
+CREATE TABLE `whatsapp_number` (
   `id` int(11) NOT NULL,
-  `name` varchar(200) NOT NULL,
-  `numbers` varchar(100) NOT NULL
+  `name` varchar(200) DEFAULT NULL,
+  `numbers` varchar(100) NOT NULL,
+  `created_at` datetime NOT NULL DEFAULT current_timestamp(),
+  `updated_at` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `whatsapp_number`
+--
+
+INSERT INTO `whatsapp_number` (`id`, `name`, `numbers`, `created_at`, `updated_at`) VALUES
+(1, '', '12121212', '2023-04-09 21:24:46', '2023-04-09 21:24:46'),
+(2, NULL, '121212121', '2023-04-09 16:32:16', '2023-04-09 16:32:16');
 
 --
 -- Indexes for dumped tables
@@ -375,12 +383,6 @@ ALTER TABLE `personal_access_tokens`
   ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
 
 --
--- Indexes for table `products`
---
-ALTER TABLE `products`
-  ADD PRIMARY KEY (`id`);
-
---
 -- Indexes for table `roles`
 --
 ALTER TABLE `roles`
@@ -401,9 +403,9 @@ ALTER TABLE `users`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `whatsapp`
+-- Indexes for table `whatsapp_number`
 --
-ALTER TABLE `whatsapp`
+ALTER TABLE `whatsapp_number`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -432,18 +434,12 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `permissions`
 --
 ALTER TABLE `permissions`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
 --
 ALTER TABLE `personal_access_tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `products`
---
-ALTER TABLE `products`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
@@ -459,10 +455,10 @@ ALTER TABLE `users`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
--- AUTO_INCREMENT for table `whatsapp`
+-- AUTO_INCREMENT for table `whatsapp_number`
 --
-ALTER TABLE `whatsapp`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `whatsapp_number`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
