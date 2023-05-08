@@ -8,9 +8,11 @@
 
 .widget__form button,
 .widget__form input[type="password"],
+.widget__form input[type="file"],
 .widget__form input[type="text"],
 .widget__login button,
 .widget__login input[type="password"],
+.widget__login input[type="file"],
 .widget__login input[type="text"], select {
     display: inline-block;
     width: 100%;

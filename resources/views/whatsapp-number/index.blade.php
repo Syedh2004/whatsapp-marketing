@@ -45,13 +45,16 @@
         </div>
     </header>
 
-    @can('whatsapp-number-create')
-        <div class="row">
-            <div class="col-md-12">
+    <div class="row">
+        <div class="col-md-12">
+            @can ('whatsapp-number-create')
                 <a class="btn btn-success" href="{{ route('whatsapp-number.create') }}"> Add New Number</a>
-            </div>
+            @endcan
+            @can ('whatsapp-number-import')
+                <a class="btn btn-success" href="{{ route('whatsapp-number.import') }}"> Import Number</a>
+            @endcan
         </div>
-    @endcan
+    </div>
 
     <div class="row">
         <div class="col-md-12 mt-30">
@@ -71,7 +74,7 @@
                                 <th>No</th>
                                 <th>Name</th>
                                 <th>Numbers</th>
-                                @can('whatsapp-number-show', 'whatsapp-number-edit', 'whatsapp-number-destroy')
+                                @can ('whatsapp-number-show', 'whatsapp-number-edit', 'whatsapp-number-destroy')
                                     <th style="width: 280px;">Action</th>
                                 @endcan
                               </tr>
@@ -86,7 +89,6 @@
 </section>
 
 @push('page-script')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
     <script>

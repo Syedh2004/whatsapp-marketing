@@ -2,18 +2,26 @@
 
 @section('content')
 
+@push('page-style')
+    <style>
+        option {
+            margin-top: 20px;
+        }
+    </style>
+@endpush
+
 <section class="content">
     <header class="main-header">
         <div class="main-header__nav">
             <h1 class="main-header__title">
-                <span>Edit Whatsapp Number</span>
+                <span>Create New User</span>
             </h1>
             <ul class="main-header__breadcrumb">
                 <li>
-                    <a href="/" onclick="return false;">WhatsApp Numbers</a>
+                    <a href="/" onclick="return false;">Home</a>
                 </li>
                 <li class="active">
-                    <a href="{{ route('whatsapp-number.index') }}"> Whatsapp Number List</a>
+                    <a href="{{ route('users') }}"> User List</a>
                 </li>
             </ul>
         </div>
@@ -21,21 +29,20 @@
 
     <div class="row">
         <div class="col-12">
-            @if ( count( $errors ) > 0)
+            @if (count($errors) > 0)
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
                     </ul>
                 </div>
             @endif
-
             <article class="widget widget__form">
                 <header class="widget__header">
                     <div class="widget__title">
-                        <i class="pe-7s-menu"></i><h3>Edit Whatsapp Number</h3>
+                        <i class="pe-7s-menu"></i><h3>Create User</h3>
                     </div>
                     <div class="widget__config">
                         <a href="#"><i class="pe-7f-refresh"></i></a>
@@ -43,11 +50,12 @@
                     </div>
                 </header>
 
-                {!! Form::model( $data, [ 'method' => 'PATCH', 'route' => [ 'whatsapp-number.update', $data->id ] ] ) !!}
+                {!! Form::open(array('route' => 'users.store', 'method' => 'POST')) !!}
                     <div class="widget__content">
-                        {!! Form::hidden('id', $data->id) !!}
-                        {!! Form::text('name', $data->name, array('placeholder' => 'Name')) !!}
-                        {!! Form::text('numbers', $data->numbers, array('placeholder' => 'Number')) !!}
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder="Enter Full name">
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="Enter Email">
+                        <input type="password" name="password" value="{{ old('password') }}" placeholder="Enter Password">
+                        <input type="password" name="confirm-password" value="{{ old('confirm-password') }}" placeholder="Enter Confirm Password">
                         <button type="submit">Apply</button>
                     </div>
                 {!! Form::close() !!}

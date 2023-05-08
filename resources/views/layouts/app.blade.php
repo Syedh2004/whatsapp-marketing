@@ -91,11 +91,18 @@
             @endif
         </div>
     </div>
-	<script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script>
+	{{-- <script type="text/javascript" src="{{ asset('assets/js/main.js') }}"></script> --}}
 	{{-- <script type="text/javascript" src="{{ asset('assets/js/amcharts/amcharts.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/js/amcharts/serial.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/js/amcharts/pie.js') }}"></script>
 	<script type="text/javascript" src="{{ asset('assets/js/chart.js') }}"></script> --}}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+    <script>
+        $(window).load(function() {
+            $("#loading").fadeOut(1000);
+        });
+    </script>
     @stack('page-script')
 </body>
 </html>

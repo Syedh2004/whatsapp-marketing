@@ -2,20 +2,20 @@
 
 @section('content')
 
+@push('page-style')
+    <style>
+        option {
+            margin-top: 20px;
+        }
+    </style>
+@endpush
+
 <section class="content">
     <header class="main-header">
         <div class="main-header__nav">
             <h1 class="main-header__title">
-                <span>Edit Whatsapp Number</span>
+                <span>Insert API Key</span>
             </h1>
-            <ul class="main-header__breadcrumb">
-                <li>
-                    <a href="/" onclick="return false;">WhatsApp Numbers</a>
-                </li>
-                <li class="active">
-                    <a href="{{ route('whatsapp-number.index') }}"> Whatsapp Number List</a>
-                </li>
-            </ul>
         </div>
     </header>
 
@@ -25,17 +25,23 @@
                 <div class="alert alert-danger">
                     <strong>Whoops!</strong> There were some problems with your input.<br><br>
                     <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
                     </ul>
+                </div>
+            @endif
+
+            @if ($message = Session::get('success'))
+                <div class="alert alert-success">
+                    <p>{{ $message }}</p>
                 </div>
             @endif
 
             <article class="widget widget__form">
                 <header class="widget__header">
                     <div class="widget__title">
-                        <i class="pe-7s-menu"></i><h3>Edit Whatsapp Number</h3>
+                        <i class="pe-7s-menu"></i><h3>Please Insert API Key</h3>
                     </div>
                     <div class="widget__config">
                         <a href="#"><i class="pe-7f-refresh"></i></a>
@@ -43,11 +49,9 @@
                     </div>
                 </header>
 
-                {!! Form::model( $data, [ 'method' => 'PATCH', 'route' => [ 'whatsapp-number.update', $data->id ] ] ) !!}
+                {!! Form::open(array('route' => 'apikey.store','method'=>'POST')) !!}
                     <div class="widget__content">
-                        {!! Form::hidden('id', $data->id) !!}
-                        {!! Form::text('name', $data->name, array('placeholder' => 'Name')) !!}
-                        {!! Form::text('numbers', $data->numbers, array('placeholder' => 'Number')) !!}
+                        <input type="text" name="apikey" value="{{ old('apikey') }}" placeholder="Enter API Key" />
                         <button type="submit">Apply</button>
                     </div>
                 {!! Form::close() !!}
@@ -55,5 +59,13 @@
         </div>
     </div>
 </section>
+
+@if ( $message = Session::get( 'success' ) )
+    <script>
+        window.setTimeout(function() {
+            window.location.href = "{{ route('send-message.index') }}";
+        }, 5000);
+    </script>
+@endif
 
 @endsection

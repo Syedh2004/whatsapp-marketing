@@ -3,19 +3,28 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+
 use Illuminate\Http\Request;
+
 use App\Models\{WhatsappNumber};
+
 use App\Http\Controllers\Controller;
+
+use App\Imports\WhatsappNumbersImport;
+
+use Maatwebsite\Excel\Facades\Excel;
+
 use DB, DataTables;
 
 class WhatsappNumberController extends Controller
 {
     function __construct()
     {
-        $this->middleware('permission:whatsapp-number|whatsapp-number-list|whatsapp-number-create|whatsapp-number-edit|whatsapp-number-delete', ['only' => ['index','store']]);
+        // $this->middleware('permission:whatsapp-number|whatsapp-number-list|whatsapp-number-create|whatsapp-number-edit|whatsapp-number-import|whatsapp-number-delete', ['only' => ['index', 'store', 'import']]);
         $this->middleware('permission:whatsapp-number', ['only' => ['index']]);
         $this->middleware('permission:whatsapp-number-create', ['only' => ['create','store']]);
         $this->middleware('permission:whatsapp-number-edit', ['only' => ['edit','update']]);
+        $this->middleware('permission:whatsapp-number-import', ['only' => ['import']]);
         $this->middleware('permission:whatsapp-number-delete', ['only' => ['destroy']]);
     }
 
@@ -31,14 +40,11 @@ class WhatsappNumberController extends Controller
                     ->addColumn('action', function( $query ) use ( $user ) {
                         $btn = '';
 
-                        if ( $user->can('whatsapp-number-show') ) {
-                            $btn .= '<a href="' . route('whatsapp-number.show', $query->id) . '" class="btn btn-info">Show</a>';
-                        }
                         if ( $user->can('whatsapp-number-edit') ) {
                             $btn .= '<a href="' . route('whatsapp-number.edit', $query->id) . '" class="btn btn-primary ml-10">Edit</a>';
                         }
                         if ( $user->can('whatsapp-number-delete') ) {
-                            $btn .= '<a href="' . route('whatsapp-number.destroy', $query->id) . '" class="btn btn-primary ml-10">Edit</a>';
+                            $btn .= '<a href="' . route('whatsapp-number.destroy', $query->id) . '" class="btn btn-primary ml-10">Delete</a>';
                         }
 
                         return $btn;
@@ -86,47 +92,86 @@ class WhatsappNumberController extends Controller
         }
     }
 
-    public function show($id)
+    public function import()
     {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("role_has_permissions","role_has_permissions.permission_id","=","permissions.id")
-            ->where("role_has_permissions.role_id",$id)
-            ->get();
-
-        return view('roles.show',compact('role','rolePermissions'));
+        return view( 'whatsapp-number.import' );
     }
 
-    public function edit($id)
+    public function importStore(Request $request)
     {
-        $role = Role::find($id);
-        $permissions = Permission::get();
-        $rolePermissions = DB::table("role_has_permissions")
-                                ->where("role_has_permissions.role_id", $id)
-                                ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
-                                ->all();
+        if ( $request->hasFile('file') ) {
+            $this->validate($request, [
+                'file' => 'required',
+            ]);
 
-        return view( 'roles.edit', compact('role', 'permissions', 'rolePermissions') );
+            $file = $request->file('file');
+
+            // Get the file extension
+            $extension = $file->getClientOriginalExtension();
+            if ( $extension == 'xlsx' ) {
+                try {
+                    Excel::import(new WhatsappNumbersImport, request()->file('file'), 'XLSX');
+
+                    return back()->withInput()->with('success', "ALl Numbers Imported!");
+                } catch (\Exception $e) {
+                    $msg = "Something Went Wrong! " . $e->getMessage();
+                    return redirect()->route('whatsapp-number.import')->withInput()->with('error', $msg);
+                }
+            } else {
+                return redirect()->route('whatsapp-number.import')->withInput()->with('error', 'Only XLSX File Supported!');
+            }
+        } else {
+            return redirect()->route('whatsapp-number.import')->withInput()->with('error', 'File Doesn`t Exists!');
+        }
+        return redirect()->route('whatsapp-number.import')->withInput()->with('warning', 'Something Went Wrong!');
     }
 
-    public function update(Request $request, $id)
+    public function edit(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required',
-            'permission' => 'required',
-        ]);
+        $data = WhatsappNumber::find( $request->id );
+        if ( !is_null( $data ) ) {
+            return view( 'whatsapp-number.edit', compact( 'data' ) );
+        } else {
+            $data['value'] = "Data Not Found!";
+            $data['url'] = route('whatsapp-number.index');
+            return view( 'data-not-found', compact( 'data' ) );
+        }
+    }
 
-        $role = Role::find($id);
-        $role->name = $request->input('name');
-        $role->save();
+    public function update(Request $request)
+    {
+        $numbers = WhatsappNumber::where('numbers', '=', $request['numbers'])->first();
 
-        $role->syncPermissions($request->input('permission'));
+        if ( $numbers != null ) {
+            $this->validate($request, [
+                'numbers' => 'required',
+            ]);
 
-        return redirect()->route('roles.index')->with('success','Role updated successfully');
+            DB::beginTransaction();
+            try {
+                WhatsappNumber::where('id', $request['id'])->update([
+                    'name'      =>      ( $request['name'] ) ? $request['name'] : '',
+                    'numbers'   =>      $request['numbers']
+                ]);
+
+                DB::commit();
+
+            } catch (\Exception $e) {
+                DB::rollback();
+                $th = "Something went wrong " . $e->getMessage();
+
+                return redirect()->route('whatsapp-number.update')->withInput()->with('error', $th);
+            }
+
+            return redirect()->route('whatsapp-number.index')->with('success','Whatsapp Number Added Updated!');
+        } else {
+            return redirect()->route('whatsapp-number.update')->withInput()->with('warning', 'Numbers Doesn`t Exists!');
+        }
     }
 
     public function destroy($id)
     {
-        DB::table("roles")->where('id',$id)->delete();
-        return redirect()->route('roles.index')->with('success','Role deleted successfully');
+        WhatsappNumber::find($id)->delete();
+        return redirect()->route('whatsapp-number.index')->with('success','Whatsapp Number deleted successfully');
     }
 }
